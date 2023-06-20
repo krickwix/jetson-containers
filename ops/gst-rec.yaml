@@ -1,176 +1,179 @@
 apiVersion: v1
-kind: Pod
+kind: Deployment
 metadata:
   name: testgst-1
   labels:
     app.kubernetes.io/name: gstpipeline-1
 spec:
-  containers:
-  - name: test-infer-1
-    image: krickwix/jetson-gst-recorder:jp5-v0.9
-    env:
-      - name: FPS
-        value: "2/1"
-      - name: WIDTH
-        value: "600"
-      - name: HEIGHT
-        value: "600"
-      - name: RTSP_URL
-        value: "rtspt://192.168.0.11:9000/live"
-      - name: RTSP_FEED_NAME
-        value: 'cam1'
-      - name: GST_DEBUG
-        value: "1"
-      - name: JPEG_QUALITY
-        value: "50"
-    volumeMounts:
-      - mountPath: "/captured"
-        name: capture-storage
-  - name: test-infer-2
-    image: krickwix/jetson-gst-recorder:jp5-v0.9
-    env:
-      - name: FPS
-        value: "2/1"
-      - name: WIDTH
-        value: "600"
-      - name: HEIGHT
-        value: "600"
-      - name: RTSP_URL
-        value: "rtspt://192.168.0.10:9000/live"
-      - name: RTSP_FEED_NAME
-        value: 'cam2'
-      - name: GST_DEBUG
-        value: "1"
-      - name: JPEG_QUALITY
-        value: "50"
-    volumeMounts:
-      - mountPath: "/captured"
-        name: capture-storage
-  - name: test-infer-3
-    image: krickwix/jetson-gst-recorder:jp5-v0.9
-    env:
-      - name: FPS
-        value: "2/1"
-      - name: WIDTH
-        value: "600"
-      - name: HEIGHT
-        value: "600"
-      - name: RTSP_URL
-        value: "rtspt://192.168.0.61:9000/live"
-      - name: RTSP_FEED_NAME
-        value: 'cam3'
-      - name: GST_DEBUG
-        value: "1"
-      - name: JPEG_QUALITY
-        value: "50"
-    volumeMounts:
-      - mountPath: "/captured"
-        name: capture-storage
-  - name: test-infer-4
-    image: krickwix/jetson-gst-recorder:jp5-v0.9
-    env:
-      - name: FPS
-        value: "2/1"
-      - name: WIDTH
-        value: "600"
-      - name: HEIGHT
-        value: "600"
-      - name: RTSP_URL
-        value: "rtspt://192.168.0.31:8554/stream1"
-      - name: RTSP_FEED_NAME
-        value: 'stream1'
-      - name: GST_DEBUG
-        value: "1"
-      - name: JPEG_QUALITY
-        value: "50"
-    volumeMounts:
-      - mountPath: "/captured"
-        name: capture-storage
-  - name: test-infer-5
-    image: krickwix/jetson-gst-recorder:jp5-v0.9
-    env:
-      - name: FPS
-        value: "2/1"
-      - name: WIDTH
-        value: "600"
-      - name: HEIGHT
-        value: "600"
-      - name: RTSP_URL
-        value: "rtspt://192.168.0.31:8554/stream2"
-      - name: RTSP_FEED_NAME
-        value: 'stream2'
-      - name: GST_DEBUG
-        value: "1"
-      - name: JPEG_QUALITY
-        value: "50"
-    volumeMounts:
-      - mountPath: "/captured"
-        name: capture-storage
-  - name: test-infer-6
-    image: krickwix/jetson-gst-recorder:jp5-v0.9
-    env:
-      - name: FPS
-        value: "2/1"
-      - name: WIDTH
-        value: "600"
-      - name: HEIGHT
-        value: "600"
-      - name: RTSP_URL
-        value: "rtspt://192.168.0.31:8554/stream3"
-      - name: RTSP_FEED_NAME
-        value: 'stream3'
-      - name: GST_DEBUG
-        value: "1"
-      - name: JPEG_QUALITY
-        value: "50"
-    volumeMounts:
-      - mountPath: "/captured"
-        name: capture-storage
-  - name: test-infer-7
-    image: krickwix/jetson-gst-recorder:jp5-v0.9
-    env:
-      - name: FPS
-        value: "2/1"
-      - name: WIDTH
-        value: "600"
-      - name: HEIGHT
-        value: "600"
-      - name: RTSP_URL
-        value: "rtspt://192.168.0.31:8554/stream4"
-      - name: RTSP_FEED_NAME
-        value: 'stream4'
-      - name: GST_DEBUG
-        value: "1"
-      - name: JPEG_QUALITY
-        value: "50"
-    volumeMounts:
-      - mountPath: "/captured"
-        name: capture-storage
-  - name: test-infer-8
-    image: krickwix/jetson-gst-recorder:jp5-v0.9
-    env:
-      - name: FPS
-        value: "2/1"
-      - name: WIDTH
-        value: "600"
-      - name: HEIGHT
-        value: "600"
-      - name: RTSP_URL
-        value: "rtspt://192.168.0.31:8554/stream5"
-      - name: RTSP_FEED_NAME
-        value: 'stream5'
-      - name: GST_DEBUG
-        value: "1"
-      - name: JPEG_QUALITY
-        value: "50"
-    volumeMounts:
-      - mountPath: "/captured"
-        name: capture-storage
-  volumes:
-    - name: capture-storage
-      persistentVolumeClaim:
-        claimName: pvc-storage
-
+  replicas: 1
+  template:
+    template:
+      spec:
+        containers:
+        - name: test-infer-1
+          image: krickwix/jetson-gst-recorder:jp5-v0.9
+          env:
+            - name: FPS
+              value: "2/1"
+            - name: WIDTH
+              value: "600"
+            - name: HEIGHT
+              value: "600"
+            - name: RTSP_URL
+              value: "rtspt://192.168.0.11:9000/live"
+            - name: RTSP_FEED_NAME
+              value: 'cam1'
+            - name: GST_DEBUG
+              value: "1"
+            - name: JPEG_QUALITY
+              value: "50"
+          volumeMounts:
+            - mountPath: "/captured"
+              name: capture-storage
+        - name: test-infer-2
+          image: krickwix/jetson-gst-recorder:jp5-v0.9
+          env:
+            - name: FPS
+              value: "2/1"
+            - name: WIDTH
+              value: "600"
+            - name: HEIGHT
+              value: "600"
+            - name: RTSP_URL
+              value: "rtspt://192.168.0.10:9000/live"
+            - name: RTSP_FEED_NAME
+              value: 'cam2'
+            - name: GST_DEBUG
+              value: "1"
+            - name: JPEG_QUALITY
+              value: "50"
+          volumeMounts:
+            - mountPath: "/captured"
+              name: capture-storage
+        - name: test-infer-3
+          image: krickwix/jetson-gst-recorder:jp5-v0.9
+          env:
+            - name: FPS
+              value: "2/1"
+            - name: WIDTH
+              value: "600"
+            - name: HEIGHT
+              value: "600"
+            - name: RTSP_URL
+              value: "rtspt://192.168.0.61:9000/live"
+            - name: RTSP_FEED_NAME
+              value: 'cam3'
+            - name: GST_DEBUG
+              value: "1"
+            - name: JPEG_QUALITY
+              value: "50"
+          volumeMounts:
+            - mountPath: "/captured"
+              name: capture-storage
+        - name: test-infer-4
+          image: krickwix/jetson-gst-recorder:jp5-v0.9
+          env:
+            - name: FPS
+              value: "2/1"
+            - name: WIDTH
+              value: "600"
+            - name: HEIGHT
+              value: "600"
+            - name: RTSP_URL
+              value: "rtspt://192.168.0.31:8554/stream1"
+            - name: RTSP_FEED_NAME
+              value: 'stream1'
+            - name: GST_DEBUG
+              value: "1"
+            - name: JPEG_QUALITY
+              value: "50"
+          volumeMounts:
+            - mountPath: "/captured"
+              name: capture-storage
+        - name: test-infer-5
+          image: krickwix/jetson-gst-recorder:jp5-v0.9
+          env:
+            - name: FPS
+              value: "2/1"
+            - name: WIDTH
+              value: "600"
+            - name: HEIGHT
+              value: "600"
+            - name: RTSP_URL
+              value: "rtspt://192.168.0.31:8554/stream2"
+            - name: RTSP_FEED_NAME
+              value: 'stream2'
+            - name: GST_DEBUG
+              value: "1"
+            - name: JPEG_QUALITY
+              value: "50"
+          volumeMounts:
+            - mountPath: "/captured"
+              name: capture-storage
+        - name: test-infer-6
+          image: krickwix/jetson-gst-recorder:jp5-v0.9
+          env:
+            - name: FPS
+              value: "2/1"
+            - name: WIDTH
+              value: "600"
+            - name: HEIGHT
+              value: "600"
+            - name: RTSP_URL
+              value: "rtspt://192.168.0.31:8554/stream3"
+            - name: RTSP_FEED_NAME
+              value: 'stream3'
+            - name: GST_DEBUG
+              value: "1"
+            - name: JPEG_QUALITY
+              value: "50"
+          volumeMounts:
+            - mountPath: "/captured"
+              name: capture-storage
+        - name: test-infer-7
+          image: krickwix/jetson-gst-recorder:jp5-v0.9
+          env:
+            - name: FPS
+              value: "2/1"
+            - name: WIDTH
+              value: "600"
+            - name: HEIGHT
+              value: "600"
+            - name: RTSP_URL
+              value: "rtspt://192.168.0.31:8554/stream4"
+            - name: RTSP_FEED_NAME
+              value: 'stream4'
+            - name: GST_DEBUG
+              value: "1"
+            - name: JPEG_QUALITY
+              value: "50"
+          volumeMounts:
+            - mountPath: "/captured"
+              name: capture-storage
+        - name: test-infer-8
+          image: krickwix/jetson-gst-recorder:jp5-v0.9
+          env:
+            - name: FPS
+              value: "2/1"
+            - name: WIDTH
+              value: "600"
+            - name: HEIGHT
+              value: "600"
+            - name: RTSP_URL
+              value: "rtspt://192.168.0.31:8554/stream5"
+            - name: RTSP_FEED_NAME
+              value: 'stream5'
+            - name: GST_DEBUG
+              value: "1"
+            - name: JPEG_QUALITY
+              value: "50"
+          volumeMounts:
+            - mountPath: "/captured"
+              name: capture-storage
+        volumes:
+          - name: capture-storage
+            persistentVolumeClaim:
+              claimName: pvc-storage
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
