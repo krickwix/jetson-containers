@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+
+metadata:
+  name: gst-http
+  labels:
+    app.kubernetes.io/name: gst-http
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: gst-http
+  replicas: 1
+  template:
+    metadata:
+      name: testgst-http
+      labels:
+        app.kubernetes.io/name: gst-http
+    spec:
+      containers:
+      - name: http-server
+        image: nginx:1.23.4
+        volumeMounts:
+          - mountPath: "/captured"
+            name: capture-storage
+          - name: nginx-cfgmap
+            mountPath: /etc/nginx/conf.d/default.conf
+            subPath: index-cfgmap
+        ports:
+        - containerPort: 80
+          name: http-port
+      volumes:
+        - name: capture-storage
+          persistentVolumeClaim:
+            claimName: pvc-storage
+        - name: nginx-cfgmap
+          configMap:
+            name: nginx-cfgmap
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: nginx-cfgmap
+data:
+  index-cfgmap: |
+    server {
+      listen 80;
+      listen [::]:80;
+      server_name _;
+      root /captured;
+      location / {
+        root /captured/;
+        autoindex on;
+        autoindex_exact_size off;
+        autoindex_format html;
+        autoindex_localtime on;
+      }
+    }
